@@ -124,9 +124,15 @@ class PraevDocView(api.Page):
                 if hasattr(i.to_object, 'nachrichtenbild'):
                     if i.to_object.nachrichtenbild:
                         bild = i.to_object.nachrichtenbild.to_object
-                        box['imgurl'] = '<img src="%s/@@download/image/%s" width="%s">' % (bild.absolute_url(),
-                                                                                   bild.image.filename, "100%")
-                    box['imgcaption'] = i.to_object.bildtitel
+                        try:
+                            box['imgurl'] = '<img src="%s/@@download/image/%s" width="%s">' % (bild.absolute_url(),
+                                                                                       bild.image.filename, "100%")
+                        except:
+                            box['imgurl'] = bild.tag(width="100%", height="100%")
+                    try:
+                        box['imgcaption'] = i.to_object.bildtitel
+                    except:
+                        box['imgcaption'] = i.to_object.title
                 if hasattr(i.to_object, 'newsimage'):
                     if i.to_object.newsimage:
                         bild = i.to_object.newsimage.to_object
