@@ -1,0 +1,103 @@
+<div tal:replace="structure provider:plone.abovecontenttitle" />
+<h1 tal:content="view/title"/>
+<div tal:replace="structure provider:plone.belowcontenttitle" />    
+<div id="parent-fieldname-description" class="documentDescription" tal:content="context/Description"/>  
+<div tal:replace="structure provider:plone.abovecontentbody" />
+<div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs praev green" tal:attributes="class view/tabclass" role="tablist">
+    <li role="presentation" class="active"><a href="#inhalt" aria-controls="inhalt" 
+        role="tab" data-toggle="tab">GRUNDWISSEN</a></li>
+    <li tal:condition="view/details" role="presentation"><a href="#details" aria-controls="details" 
+        role="tab" data-toggle="tab">ERWEITERTES WISSEN</a></li>
+    <li tal:condition="view/zusatzinfos" role="presentation"><a href="#zusatzinfos" aria-controls="zusatzinfos" 
+        role="tab" data-toggle="tab">EXPERTENWISSEN</a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div style="margin-top:20px;" role="tabpanel" class="tab-pane active" id="inhalt" tal:content="structure view/text">...</div>
+    <div style="margin-top:20px;" al:condition="view/details" role="tabpanel" class="tab-pane" id="details" tal:content="structure view/details">...</div>
+    <div style="margin-top:20px;" tal:condition="view/zusatzinfos" role="tabpanel" class="tab-pane" 
+      id="zusatzinfos" tal:content="structure view/zusatzinfos">...</div>
+  </div>
+</div>
+
+<div style="margin-top:10px;" class="praevdoc_imagebox" tal:condition="view/bilder">
+<h4>Bilder zum Text</h4> 
+<div class="container-fluid" tal:define="groups python:view.bilder[1]">
+  <div tal:repeat="group groups" class="row">
+    <div tal:repeat="image group" class="col-xs-6 col-md-2">
+      <dl class="image-inline captioned">
+        <dt>
+      <a href="#myModal" tal:attributes="href string:#${image/id}" role="button" data-toggle="modal">
+        <span tal:replace="structure image/tag"/>
+        <!--<img tal:attributes="src string:${image/url}/image_mini">-->
+      </a>
+      </dt>
+      <!--<dd class="image-caption" style="width:120px;" tal:content="image/desc"></dd>-->
+    </dl>
+    </div>
+  </div>
+</div>
+</div>
+
+<div tal:condition="view/modale" tal:repeat="bild view/modale"
+  class="modal fade" id="myModal" tal:attributes="id bild/id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" tal:content="bild/title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <dl class="image-inline captioned">
+          <dt>
+            <span tal:replace="structure bild/tag"/>
+            <!--<img tal:attributes="src string:${bild/url}/image_preview">-->
+          </dt>
+          <dd class="image-caption" style="width:100%;" tal:content="bild/desc"></dd>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="praevdoc_contentbox" tal:condition="view/contentboxes">
+<h2>Empfehlungen zum Weiterlesen</h2>
+<div class="container-fluid" tal:define="groups view/contentboxes">
+  <div tal:repeat="group groups" class="row-eq-height">
+    <div tal:repeat="box group" class="col-xs-6 col-md-4 panel panel-primary panel-siguv"
+      tal:attributes="class box/boxclass">
+      <!--<div class="panel-heading" tal:content="box/title"></div>-->
+      <div class="box-body">
+      <a class="boxlink col-xs-12" href="" tal:attributes="href box/url">
+      <span tal:replace="structure box/imgurl"/>
+      <h4 class="" tal:content="box/title" tal:attributes="class box/titleclass"/>
+      <p tal:content="box/desc"></p>
+      </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="praevdoc_filebox" tal:condition="view/dateien">
+<h2>Dateien zum Download</h2>
+<ul>
+  <li tal:repeat="file view/dateien">
+    <a tal:attributes="href file/url" tal:content="file/title"/></li>
+</ul>
+</div>
+
+<div class="praevdoc_linkbox" tal:condition="view/links">
+<h2>Links zu externen Informationsangeboten</h2>
+<ul>
+  <li tal:repeat="link view/links">
+  <a tal:attributes="href link/url" tal:content="link/title"></a></li>
+</ul>
+</div>
+<div class="row"><p>&nbsp;</p></div>
+<div tal:replace="structure provider:plone.belowcontentbody" />  

@@ -1,0 +1,17 @@
+bgetem.praevention Installation
+-------------------------------
+
+To install bgetem.praevention using zc.buildout and the plone.recipe.zope2instance
+recipe to manage your project, you can do this:
+
+* Add ``bgetem.praevention`` to the list of eggs to install, e.g.:
+
+    [buildout]
+    ...
+    eggs =
+        ...
+        bgetem.praevention
+       
+* Re-run buildout, e.g. with:
+
+    $ ./bin/buildout

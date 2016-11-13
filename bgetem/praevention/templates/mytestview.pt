@@ -1,0 +1,17 @@
+<h1>Webcoderefenzen</h1>
+
+<div class="row" tal:define="mylist view/objectlist">
+    <table class="table-bordered">
+       <thead>
+         <th>Titel</th>
+         <th>Webcodes</th>
+       </thead>
+       <tbody>
+         <tr tal:repeat="zeile mylist">
+           <td tal:content="zeile/url"/>
+           <td tal:content="zeile/codes"/>
+         </tr>
+       </tbody>
+    </table>
+</div>
+
