@@ -1,9 +1,11 @@
 from zope.interface import Interface
+import html2text
 import transaction
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from uvc.api import api
 from bgetem.praevention.doku_praevention import IDokuPraevention
+from plone import api as ploneapi
 
 api.templatedir('templates')
 
@@ -92,6 +94,69 @@ class FAQTestView(api.Page):
             objectlist.append(entry)
         self.objectlist = objectlist
 
+
+class RowCountView(api.Page):
+    api.context(Interface)
+
+    def zerleghtml(self, field):
+        html = field.raw
+        return len(html2text.html2text(html))
+        
+    def update(self):
+        pcat = getToolByName(self.context, 'portal_catalog')
+        self.praevdocs = 0
+        self.praevdoc_chars = 0
+        self.glossars = 0
+        self.glossars_chars = 0
+        self.folders = 0
+        self.folders_chars = 0
+        self.docs = 0
+        self.docs_chars = 0
+        brains = pcat(portal_type = 'bgetem.praevention.dokupraevention')
+        for i in brains:
+            self.praevdocs += 1
+            obj = i.getObject()
+            self.praevdoc_chars += len(obj.title.encode('utf-8'))
+            if obj.ueberschrift:
+                self.praevdoc_chars += len(obj.ueberschrift.encode('utf-8'))
+            self.praevdoc_chars += len(obj.description.encode('utf-8'))
+            if obj.haupttext:
+                self.praevdoc_chars += self.zerleghtml(obj.haupttext)
+            if obj.details:
+                self.praevdoc_chars += self.zerleghtml(obj.details)
+            if obj.zusatzinfos:
+                self.praevdoc_chars += self.zerleghtml(obj.details)
+        brains = pcat(portal_type = 'Folder')
+        for i in brains:
+            self.folders += 1
+            obj = i.getObject()
+            self.folders_chars += len(obj.title.encode('utf-8'))
+            self.folders_chars += len(obj.description.encode('utf-8'))
+            if obj.text:    
+                self.folders_chars += self.zerleghtml(obj.text)
+        brains = pcat(portal_type = 'Document')
+        for i in brains:
+            self.docs += 1
+            obj = i.getObject()
+            self.docs_chars += len(obj.title.encode('utf-8'))
+            self.docs_chars += len(obj.description.encode('utf-8'))
+            if obj.text:    
+                self.docs_chars += self.zerleghtml(obj.text)
+
+        brains = pcat(portal_type = 'PloneGlossaryDefinition')
+        for i in brains:
+            self.glossars += 1
+            obj = i.getObject()
+            self.glossars_chars += len(obj.title.encode('utf-8'))
+            self.glossars_chars += len(obj.description.encode('utf-8'))
+            self.glossars_chars += len(html2text.html2text(obj.getDefinition().decode('utf-8')))
+        self.praevdoc_rows = self.praevdoc_chars/55
+        self.glossars_rows = self.glossars_chars/55
+        self.folders_rows = self.folders_chars/55
+        self.docs_rows = self.docs_chars/55
+        self.rowsum = self.praevdoc_rows + self.glossars_rows + self.folders_rows + self.docs_rows
+
+
 class MyDownload(api.View):
     api.context(IDokuPraevention)
 
@@ -108,6 +173,11 @@ class MyDownload(api.View):
 class PraevDocView(api.Page):
     api.context(IDokuPraevention)
 
+    def testable(self):
+        if ploneapi.user.is_anonymous():
+            return False
+        return True
+
     def splitContentBoxes(self, refs, size=3):
         if not refs:
             return []
@@ -121,7 +191,8 @@ class PraevDocView(api.Page):
                 box['titleclass'] = signalcolor
                 box['imgurl'] = ''
                 box['imgcaption'] = ''
-                if hasattr(i.to_object, 'nachrichtenbild'):
+                portal_type = i.to_object.portal_type
+                if portal_type == 'bgetem.praevention.dokupraevention' and hasattr(i.to_object, 'nachrichtenbild'):
                     if i.to_object.nachrichtenbild:
                         bild = i.to_object.nachrichtenbild.to_object
                         try:
@@ -133,7 +204,7 @@ class PraevDocView(api.Page):
                         box['imgcaption'] = i.to_object.bildtitel
                     except:
                         box['imgcaption'] = i.to_object.title
-                if hasattr(i.to_object, 'newsimage'):
+                if portal_type == 'Folder' and hasattr(i.to_object, 'newsimage'):
                     if i.to_object.newsimage:
                         bild = i.to_object.newsimage.to_object
                         box['imgurl'] = '<img src="%s/@@download/image/%s" width="%s">' % (bild.absolute_url(),

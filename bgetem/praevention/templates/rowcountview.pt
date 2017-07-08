@@ -1,0 +1,40 @@
+<h1>Auswertung der Dokumente im Portal</h1>
+
+<table class="table table-striped">
+  <thead>
+    <th>Dokumentart</th>
+    <th>Anzahl Objekte</th>
+    <th>Anzahl Zeichen</th>
+    <th>Anzahl Zeilen</th>
+  </thead>
+  <tbody>
+   <tr>
+    <td>Ordner mit Text</td>
+    <td tal:content="view/folders"/>
+    <td tal:content="view/folders_chars"/>
+    <td tal:content="view/folders_rows"/>
+   </tr>
+   <tr>
+    <td>Dokumente</td>
+    <td tal:content="view/docs"/>
+    <td tal:content="view/docs_chars"/>
+    <td tal:content="view/docs_rows"/>
+   </tr>
+   <tr>
+    <td>Glossars Definition</td>
+    <td tal:content="view/glossars"/>
+    <td tal:content="view/glossars_chars"/>
+    <td tal:content="view/glossars_rows"/>
+   </tr>
+   <tr>
+    <td>Dokumente Prävention</td>
+    <td tal:content="view/praevdocs"/>
+    <td tal:content="view/praevdoc_chars"/>
+    <td tal:content="view/praevdoc_rows"/>
+   </tr>
+   <tr>
+    <td colspan="3"><b>Summe Zeilen</b></td>
+    <td><b tal:content="view/rowsum"></b></td>
+   </tr>
+  </tbody>
+</table>

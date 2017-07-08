@@ -12,6 +12,17 @@
         role="tab" data-toggle="tab">ERWEITERTES WISSEN</a></li>
     <li tal:condition="view/zusatzinfos" role="presentation"><a href="#zusatzinfos" aria-controls="zusatzinfos" 
         role="tab" data-toggle="tab">EXPERTENWISSEN</a></li>
+
+    <li tal:condition="view/testable" role="presentation" class="dropdown">
+      <a id="dLabel" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        ARBEITSHILFEN
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dLabel">
+        <li><a href="http://www.google.de">Google</a></li>
+        <li><a href="http://www.bing.de">Bing</a></li>
+      </ul>
+    </li>
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
