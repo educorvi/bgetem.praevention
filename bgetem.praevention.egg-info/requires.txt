@@ -1,0 +1,7 @@
+setuptools
+plone.app.dexterity [grok, relations]
+plone.app.relationfield
+plone.namedfile [blobs]
+collective.z3cform.widgets
+plone.formwidget.multifile
+collective.z3cform.datagridfield
